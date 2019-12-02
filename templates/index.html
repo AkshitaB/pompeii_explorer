@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pompeii Explorer</title>
+</head>
+<script language="JavaScript" type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='mdl/material.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+<script src="{{ url_for('static', filename='mdl/material.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<body onload="get_data_by_idx();">
+
+<div class="mdl-layout mdl-js-layout">
+  <header class="mdl-layout__header mdl-layout__header--scroll">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Pompeii Explorer</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation -->
+      <nav class="mdl-navigation">
+        <!-- <a class="mdl-navigation__link" href="">Link</a> -->
+      </nav>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Pompeii Explorer Regions</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="">Region 1, Insula 1</a>
+      <a class="mdl-navigation__link" href="">Region 1, Insula 2</a>
+      <a class="mdl-navigation__link" href="">Region 1, Insula 3</a>
+      <a class="mdl-navigation__link" href="">Region 1, Insula 4</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="page-content"-->
+	    	<div class = "mdl-grid">
+               <div class = "mdl-cell mdl-cell--6-col graybox">
+                   <div class="mdl-grid">
+                   		<!-- <div class="demo-card-image mdl-card mdl-shadow--2dp" style="height: 500px">
+						  <div class="mdl-card__title mdl-card--expand"></div>
+						  <div class="mdl-card__actions">
+						    <span class="demo-card-image__filename">images/75_0.jpg</span>
+						  </div>
+						</div> -->
+						<img class="mdl-cell mdl-cell--10-col" src="images/53_0.jpg" alt="images/53_0.jpg" height="50%" width="80%" id="image">
+						<div class="mdl-cell mdl-cell--2-col">
+						<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="get_data_by_idx()/*changePicture();*/">
+						  <i class="material-icons">arrow_right_alt</i>
+						</button>
+					    </div>
+						<div class="mdl-textfield mdl-js-textfield" style="width: 100%">
+						    <textarea class="mdl-textfield__input" type="text" rows= "5" id="image_text" >Cubicle (8), wall S,
+central section and O, upper area. The jay perched on the picture depicting Apis, seems to be in conversation with the magpie. A retrospective blackbird is seated on the loop of the canopic area of Apis.</textarea>
+						    <label class="mdl-textfield__label" for="sample5">Description</label>
+						</div>
+                   </div>
+               </div>
+               <div class = "mdl-cell mdl-cell--4-col graybox">
+               	<h4>
+               		About the image:
+               		<div class="mdl-cell mdl-cell--12-col"> 
+	               		<!-- <form action="#">
+						  <div class="mdl-textfield mdl-js-textfield">
+						    <input class="mdl-textfield__input" type="text" id="sample9">
+						    <label class="mdl-textfield__label" for="sample9">Location...</label>
+						  </div>
+						  <div class="mdl-textfield mdl-js-textfield">
+						    <input class="mdl-textfield__input" type="text" id="sample10"></input>
+						    <label class="mdl-textfield__label" for="sample9">Photo negative</label>
+						  </div>
+						  
+						</form> -->
+						<!--p>Location: <input id="location" value="Region 1, Cubicle (8), Wall S"></p-->
+						<p>Photo negative: <input id="image_negative" value="80GFNEK6123"></p>
+						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+						  Save
+						</button>
+					</div>
+               	</h4>
+               </div>
+               <div class="mdl-cell mdl-cell--2-col">
+               	<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="window.location.reload();">
+				  <i class="material-icons">arrow_right_alt</i>
+				</button>
+               </div>
+            </div>
+    	
+    </div>
+    <p style="visibility: hidden;" id="curr_idx">-1</p>
+  </main>
+</div>
+</body>
+</html>
