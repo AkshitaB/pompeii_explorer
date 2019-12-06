@@ -1,12 +1,23 @@
 
 //load from saved file.
-var curr_overall_idx = -1
-var curr_pic_idx = -1
-var curr_text_idx = -1
+// var curr_overall_idx = '{{ start_idx }}'; // -1
+// var curr_pic_idx = -1
+// var curr_text_idx = -1
 
-function setPicture(image_data) {
-    //console.log('setting picture...');
+console.log("curr_idx")
+console.log(curr_overall_idx)
+
+function setPicture(image_data, image_path) {
+    console.log('setting picture...');
+    console.log(image_path);
     document.getElementById("image").src = image_data;
+    $("#image_path").text(image_path);
+}
+
+function setWholePage(image_data) {
+    console.log('setting page...');
+    console.log(image_path);
+    document.getElementById("whole_page").src = image_data;
 }
 
 function setText(text) {
@@ -15,6 +26,17 @@ function setText(text) {
 
 function setPhotoNegative(negative) {
     $("#image_negative").val(negative);
+}
+
+function notify(message) {
+    var notification = document.querySelector('.mdl-js-snackbar');
+    var data = {
+      message: message,
+      //actionHandler: function(event) {},
+      //actionText: 'Undo',
+      timeout: 10000
+    };
+    notification.MaterialSnackbar.showSnackbar(data);
 }
 
 function get_data_by_idx(next) {
@@ -36,8 +58,10 @@ function get_data_by_idx(next) {
         success: function (data) {
             //alert(data);
             //console.log('got data...')
-            setPicture(data['image_data']);
-            setText(data['text']);
+            //console.log(data)
+            setPicture(data['image_data'], data['image_path']);
+            setText(data['raw_text']);
+            setWholePage(data['page_image']);
             curr_overall_idx = idx;
             curr_pic_idx = idx;
             curr_text_idx = idx;
@@ -45,6 +69,7 @@ function get_data_by_idx(next) {
         },
         error: function(xhr, status, error) {
             console.log(error)
+            alert('Error. Check console log.')
         }
     });
 
@@ -67,12 +92,13 @@ function get_image_by_idx(next) {
         success: function (data) {
             //alert(data);
             //console.log('got data...')
-            setPicture(data['image_data']);
+            setPicture(data['image_data'], data['image_path']);
             //setText(data['text']);
             curr_pic_idx = idx;
         },
         error: function(xhr, status, error) {
             console.log(error)
+            alert('Error. Check console log.')
         }
     });
 
@@ -96,11 +122,12 @@ function get_text_by_idx(next) {
             //alert(data);
             //console.log('got data...')
             //setPicture(data['image_data']);
-            setText(data['text']);
+            setText(data['raw_text']);
             curr_text_idx = idx;
         },
         error: function(xhr, status, error) {
             console.log(error)
+            alert('Error. Check console log.')
         }
     });
 
@@ -140,9 +167,11 @@ function save_alignment() {
             curr_overall_idx = idx_to_set;
             curr_pic_idx = idx_to_set;
             curr_text_idx = idx_to_set;
+            notify("Saved");
         },
         error: function(xhr, status, error) {
             console.log(error)
+            alert('Error. Check console log.')
         }
     });
     }
@@ -154,10 +183,12 @@ function save_alignment() {
             url: "/get_data_by_index",
             data: {'curr_idx': idx},
             success: function (data) {
+                console.log(data)
                 //alert(data);
                 //console.log('got data...')
-                setPicture(data['image_data']);
-                setText(data['text']);
+                setPicture(data['image_data'], data['image_path']);
+                setText(data['raw_text']);
+                setWholePage(data['page_image']);
                 curr_overall_idx = idx;
                 curr_pic_idx = idx;
                 curr_text_idx = idx;
@@ -165,7 +196,44 @@ function save_alignment() {
             },
             error: function(xhr, status, error) {
                 console.log(error)
+                alert('Error. Check console log.')
             }
         });
     }
+}
+
+function save_progress() {
+    console.log("Saving progress until " + curr_overall_idx);
+    $.ajax({
+            type: "GET",
+            data: {'curr_idx': curr_overall_idx},
+            url: "/save_progress",
+            success: function (data) {
+                notify("Saved progress on disk");
+            },
+            error: function(xhr, status, error) {
+                console.log(error)
+                alert('Error. Check console log.');
+            }
+        });
+}
+
+function reload() {
+    console.log("Reloading " + curr_overall_idx);
+    $.ajax({
+            type: "GET",
+            url: "/reload",
+            success: function (data) {
+                notify("Reloaded csv from disk");
+                var idx = data['index_to_load'] - 1;
+                curr_overall_idx = idx;
+                curr_pic_idx = idx;
+                curr_text_idx = idx;
+
+            },
+            error: function(xhr, status, error) {
+                console.log(error)
+                alert('Error. Check console log.');
+            }
+        });
 }

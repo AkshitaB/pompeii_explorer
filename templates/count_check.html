@@ -10,10 +10,8 @@
 <script src="{{ url_for('static', filename='mdl/material.min.js') }}"></script>
 <script type="text/javascript">
   var curr_overall_idx = parseInt('{{ start_idx }}'); // -1
-  var curr_pic_idx = parseInt('{{ start_idx }}');
-  var curr_text_idx = parseInt('{{ start_idx }}');
 </script>
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/count_check.js') }}"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <body onload="get_data_by_idx(true);">
 
@@ -40,54 +38,26 @@
                         <i class="material-icons">arrow_left_alt</i>
                       </button>
                     </div>
-                    <div class="mdl-cell mdl-cell--10-col" style="height: 400px; text-align: center;">
+                    <div class="mdl-cell mdl-cell--10-col" style="height: 500px; text-align: center;">
                       <div class="mdl-grid graybox" style="text-align: center;">
-                        <!--div class="mdl-cell mdl-cell--2-col">
-                          <div style="height: 450px">
-                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="get_image_by_idx(false)" style="top: 50%">
-                            <i class="material-icons">arrow_left_alt</i>
-                            </button>
-                          </div>
-                          <div>
-                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="get_text_by_idx(false)">
-                            <i class="material-icons">arrow_left_alt</i>
-                            </button>
-                          </div>
-                        </div-->
-                        <div class="mdl-cell mdl-cell--12-col" style="height: 400px; text-align: center;">
+                        <div class="mdl-cell mdl-cell--12-col" style="height: 500px; text-align: center;">
                         <p id="image_path">page this</p>
                         <img id="image" style="max-width:100%; max-height:100%;">
-                        <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
-                          <textarea class="mdl-textfield__input" type="text" rows= "5" id="image_text" >a</textarea>
-                          <label class="mdl-textfield__label" for="sample5">Description</label>
-                        </div>
                         <div style="text-align: center;">
                           <button class="mdl-button mdl-js-button mdl-button--raised" onclick="save_progress();">
                             Save Progress
                           </button>
                         </div>
                         <div style="text-align: center;">
-                          <button class="mdl-button mdl-js-button mdl-button--raised" onclick="reload();">
-                            Reload
+                          <button class="mdl-button mdl-js-button mdl-button--raised" onclick="mark_page();">
+                            Mark Page
                           </button>
                         </div>
                         </div>
-                        <!--div class="mdl-cell mdl-cell--2-col">
-                          <div style="height: 450px">
-                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="get_image_by_idx(true)" style="top: 50%">
-                            <i class="material-icons">arrow_right_alt</i>
-                            </button>
-                          </div>
-                          <div>
-                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="get_text_by_idx(true)">
-                            <i class="material-icons">arrow_right_alt</i>
-                            </button>
-                          </div>
-                        </div-->
                       </div>
                     </div>
                     <div class="mdl-cell mdl-cell--1-col">
-                      <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="save_alignment()"style="top: 50%">
+                      <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="get_data_by_idx(true)"style="top: 50%">
                         <i class="material-icons">arrow_right_alt</i>
                       </button>
                     </div>
@@ -95,7 +65,10 @@
                    </div>
                </div>
                <div class = "mdl-cell mdl-cell--6-col" style="justify-content: center;">
-                <img id="whole_page" style="max-width:100%; max-height:100%;">
+                <div class="mdl-cell mdl-cell--12-col" style="height: 500px; text-align: center;">
+                  <p id="raw_image_path">page that</p>
+                  <img id="whole_page" style="max-width:100%; max-height:100%;">
+                </div>
                </div>
             </div>
     </div>
