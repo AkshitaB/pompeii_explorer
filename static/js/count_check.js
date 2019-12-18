@@ -7,6 +7,16 @@
 console.log("curr_idx")
 console.log(curr_overall_idx)
 
+document.onkeyup = function(e) {
+    if (e.which == 77) {
+        mark_page();
+    }
+    else if (e.which == 85) {
+        unmark_page();
+    }
+    //console.log(print(e.which))
+}
+
 function setPicture(image_data, image_path) {
     console.log('setting picture...');
     console.log(image_path);
@@ -27,7 +37,7 @@ function notify(message) {
       message: message,
       //actionHandler: function(event) {},
       //actionText: 'Undo',
-      timeout: 10000
+      timeout: 1000
     };
     notification.MaterialSnackbar.showSnackbar(data);
 }
@@ -73,7 +83,25 @@ function mark_page() {
             data: {'page': image_path},
             url: "/mark_page",
             success: function (data) {
-                notify("Marked page "+image_path);
+                notify("Marked "+image_path);
+            },
+            error: function(xhr, status, error) {
+                console.log(error)
+                alert('Error. Check console log.');
+            }
+        });
+}
+
+function unmark_page() {
+    var image_path = $("#raw_image_path").text();
+    //var page = image_path.replace('page_', '').replace('.jpg').split('_')[0];
+    console.log("Marking page " + image_path);
+    $.ajax({
+            type: "GET",
+            data: {'page': image_path},
+            url: "/unmark_page",
+            success: function (data) {
+                notify("Unarked "+image_path);
             },
             error: function(xhr, status, error) {
                 console.log(error)

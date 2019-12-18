@@ -2,10 +2,9 @@ import os
 import json
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 import data
+import argparse
 
 app = Flask(__name__)
-app.config['data_loader'] = data.DataLoader('../final_extraction/PPM3-aligned.csv', '../final_extraction/PPM3', '../PPM/PPM_text_files/truncated/PPM-3ocr.txt')
-app.config['raw_data_loader'] = data.RawDataLoader('../final_extraction/PPM3', '../page_images/PPM3/images', '../final_extraction/trial')
 
 '''
 To do:
@@ -69,6 +68,13 @@ def mark_page():
     app.config['raw_data_loader'].mark_page(page)
     return "done"
 
+@app.route('/unmark_page', methods = ['GET'])
+def unmark_page():
+    data = request.args
+    page = data['page']
+    app.config['raw_data_loader'].unmark_page(page)
+    return "done"
+
 @app.route('/get_raw_data_by_index', methods = ['GET'])
 def get_raw_data_by_index():
     data = request.args
@@ -86,5 +92,24 @@ def save_raw_progress():
     app.config['raw_data_loader'].save_progress(curr_idx)
     return "done"
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Web interface to mark incorrect extractions')
+    parser.add_argument('image_folder', help='Path where pictures have been auto-extracted')
+    parser.add_argument('raw_image_folder', help='Path of PDF page images')
+    parser.add_argument('marked_page_folder', help='Path where incorrect pages will be stored')
+    parser.add_argument('load_previous_state', type=str2bool, default=True, help='Load previously saved progress')
+
+    args = parser.parse_args()
+    #app.config['data_loader'] = data.DataLoader('../final_extraction/PPM3-aligned.csv', '../final_extraction/PPM3', '../PPM/PPM_text_files/truncated/PPM-3ocr.txt')
+    app.config['raw_data_loader'] = data.RawDataLoader(args.image_folder, args.raw_image_folder, args.marked_page_folder, args.load_previous_state)
     app.run(debug=True, host='0.0.0.0')

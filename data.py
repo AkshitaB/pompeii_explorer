@@ -84,13 +84,13 @@ class DataLoader(object):
         self.data.drop(['Unnamed: 0'], axis=1, inplace=True)
 
 class RawDataLoader(object):
-    def __init__(self, image_folder, raw_image_folder, marked_page_folder):
+    def __init__(self, image_folder, raw_image_folder, marked_page_folder, load_previous_state=True):
         self.image_folder = image_folder
         self.raw_image_folder = raw_image_folder
         self.marked_page_folder = marked_page_folder
-        self.load()
+        self.load(load_previous_state)
 
-    def load(self):
+    def load(self, load_previous_state):
         #sorted_pages = sorted([x.replace('.jpg', '').replace('page_', '') for x in os.listdir(self.raw_image_folder)], key=int)
         sorted_pages = sorted([(x.replace('.jpg', '').replace('page_', ''), x) for x in os.listdir(self.raw_image_folder)], key=lambda x:int(x[0]))
         sorted_pages = [x[1] for x in sorted_pages]
@@ -111,8 +111,15 @@ class RawDataLoader(object):
         #self.mapping = [(page, glob.glob(os.path.join(image_folder, page.replace('.jpg').split('_')[0]+'*'))) for page in sorted_pages]
         #self.count_mapping = [(tup[0], len(tup[1])) for tup in self.mapping]
 
+        if not load_previous_state:
+            with open('count_progress.txt', 'w') as f:
+                f.write('0')
+
     def mark_page(self, page):
         shutil.copy(os.path.join(self.raw_image_folder, page), self.marked_page_folder)
+
+    def unmark_page(self, page):
+        os.remove(os.path.join(self.marked_page_folder, page))
 
     def get_data(self, index):
         index = int(index)
