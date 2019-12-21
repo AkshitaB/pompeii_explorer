@@ -113,7 +113,7 @@ class RawDataLoader(object):
 
         if not load_previous_state:
             with open('count_progress.txt', 'w') as f:
-                f.write('0')
+                f.write('-1')
 
     def mark_page(self, page):
         shutil.copy(os.path.join(self.raw_image_folder, page), self.marked_page_folder)

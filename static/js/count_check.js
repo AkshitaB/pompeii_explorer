@@ -14,6 +14,15 @@ document.onkeyup = function(e) {
     else if (e.which == 85) {
         unmark_page();
     }
+    else if (e.which == 37) {
+        get_data_by_idx(false);
+    }
+    else if (e.which == 39) {
+        get_data_by_idx(true);
+    }
+    else if (e.which == 83) {
+        save_progress();
+    }
     //console.log(print(e.which))
 }
 
