@@ -69,7 +69,8 @@ function get_data_by_idx(next) {
         data: {'curr_idx': idx},
         success: function (data) {
             //alert(data);
-            //console.log('got data...')
+            console.log('got data...')
+            console.log(data['image_path'])
             setPicture(data['image_data'], data['image_path']);
             setWholePage(data['page_image'], data['page_path']);
             curr_overall_idx = idx;

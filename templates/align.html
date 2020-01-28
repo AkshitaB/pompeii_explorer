@@ -13,7 +13,7 @@
   var curr_pic_idx = parseInt('{{ start_idx }}');
   var curr_text_idx = parseInt('{{ start_idx }}');
 </script>
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/align.js') }}"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <body onload="get_data_by_idx(true);">
 
@@ -94,7 +94,7 @@
                     
                    </div>
                </div>
-               <div class = "mdl-cell mdl-cell--6-col" style="justify-content: center;">
+               <div class = "mdl-cell mdl-cell--6-col" style="justify-content: center; height: 600px">
                 <img id="whole_page" style="max-width:100%; max-height:100%;">
                </div>
             </div>

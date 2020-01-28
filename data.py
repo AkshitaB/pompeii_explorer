@@ -9,19 +9,19 @@ import shutil
 import chunk_align
 
 class DataLoader(object):
-    def __init__(self, data_csv, image_folder, ocr_text):
+    def __init__(self, data_csv, image_folder, ocr_text, pages_folder, load_previous_state=True):
         self.data_csv = data_csv
         self.image_folder = image_folder
         self.ocr_text = ocr_text
-        self.load()
+        self.pages_folder = pages_folder
+        self.load(load_previous_state)
         #self.data['aligned'] = "no"
 
     def get_data(self, index):
         index = int(index)
         entry = dict(self.data.loc[index])
-        print(index)
+        #print(index)
         curr_page = self.data.loc[index].image_path.replace('.jpg', '').replace('page_', '').replace('extra_', '').split('_')[0]
-        pages_folder = '../page_images/PPM3/images'
         if isinstance(entry['image_path'], str):
             with open(os.path.join(self.image_folder, entry['image_path']), "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read())
@@ -35,7 +35,7 @@ class DataLoader(object):
             entry['text'] = ''
             entry['id'] = ''
 
-        with open(os.path.join(pages_folder, 'page_'+curr_page+'.jpg'), "rb") as image_file:
+        with open(os.path.join(self.pages_folder, 'page_'+curr_page+'.jpg'), "rb") as image_file:
             encoded_page_string = base64.b64encode(image_file.read())
         entry['page_image'] = 'data:image/jpg;base64,' + encoded_page_string.decode('utf-8')
 
@@ -66,22 +66,27 @@ class DataLoader(object):
     def save_progress(self, aligned_until):
         #self.data.loc[:aligned_until, 'aligned'] = "yes"
         #self.data.to_csv(self.data_csv+'.'+datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
-        with open('progress.txt', 'w') as f:
+        with open('align_progress.txt', 'w') as f:
             f.write(aligned_until)
 
     def get_last_aligned_index(self):
         try:
-            with open('progress.txt') as f:
+            with open('align_progress.txt') as f:
                 z = f.read()
         except:
             z = -1
         return int(z)
         #return self.data[self.data['aligned'] == 'no'].index[0] - 1 #Get to the first no.
 
-    def load(self):
+    def load(self, load_previous_state):
         chunk_align.get_current_alignment(self.image_folder, self.ocr_text, self.data_csv)
         self.data = pd.read_csv(self.data_csv)
         self.data.drop(['Unnamed: 0'], axis=1, inplace=True)
+
+        if not load_previous_state:
+            with open('align_progress.txt', 'w') as f:
+                f.write('-1')
+
 
 class RawDataLoader(object):
     def __init__(self, image_folder, raw_image_folder, marked_page_folder, load_previous_state=True):
@@ -96,6 +101,7 @@ class RawDataLoader(object):
         sorted_pages = [x[1] for x in sorted_pages]
         self.mapping = []
         for page in sorted_pages:
+            #print(os.path.join(self.image_folder, 'page_'+page.replace('.jpg', '').split('_')[-1]+'_*'))
             matches = glob.glob(os.path.join(self.image_folder, 'page_'+page.replace('.jpg', '').split('_')[-1]+'_*'))
             matches = [os.path.basename(x) for x in matches]
             sorted_matches = sorted([(x.replace('.jpg', '').replace('page_', ''), x) for x in matches], key=lambda x:int(x[0]))
@@ -125,6 +131,7 @@ class RawDataLoader(object):
         index = int(index)
         entry = self.mapping[index]
         print(index)
+        print(entry)
 
         data_entry = {}
 
@@ -139,6 +146,7 @@ class RawDataLoader(object):
             data_entry['image_data'] = 'data:image/jpg;base64,' + encoded_string.decode('utf-8')
             data_entry['image_path'] = entry[1]
         else:
+            print('else')
             data_entry['image_data'] = ''
             data_entry['image_path'] = ''
 

@@ -57,7 +57,7 @@ def save_progress():
 @app.route('/reload', methods = ['GET'])
 def reload():
     data = request.args
-    app.config['data_loader'].load()
+    app.config['data_loader'].load(True)
     return jsonify({'index_to_load': app.config['data_loader'].get_last_aligned_index()})
     #return "done"
 
@@ -80,7 +80,7 @@ def get_raw_data_by_index():
     data = request.args
     curr_idx = data['curr_idx']
     entry = app.config['raw_data_loader'].get_data(curr_idx)
-
+    print(entry['image_path'])
     #print(entry['image_path'], entry['raw_text'], entry['id'])
     strin = jsonify(entry)
     return strin
@@ -107,9 +107,12 @@ if __name__ == '__main__':
     parser.add_argument('image_folder', help='Path where pictures have been auto-extracted')
     parser.add_argument('raw_image_folder', help='Path of PDF page images')
     parser.add_argument('marked_page_folder', help='Path where incorrect pages will be stored')
+    parser.add_argument('alignment_csv', help='Path of csv where image and text is aligned')
+    parser.add_argument('ocr_text', help='Path of text file where OCR text is stored')
     parser.add_argument('load_previous_state', type=str2bool, default=True, help='Load previously saved progress')
 
     args = parser.parse_args()
     #app.config['data_loader'] = data.DataLoader('../final_extraction/PPM3-aligned.csv', '../final_extraction/PPM3', '../PPM/PPM_text_files/truncated/PPM-3ocr.txt')
+    app.config['data_loader'] = data.DataLoader(args.alignment_csv, args.image_folder, args.ocr_text, args.raw_image_folder)
     app.config['raw_data_loader'] = data.RawDataLoader(args.image_folder, args.raw_image_folder, args.marked_page_folder, args.load_previous_state)
     app.run(debug=True, host='0.0.0.0')
